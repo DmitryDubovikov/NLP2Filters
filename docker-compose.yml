@@ -5,8 +5,11 @@ services:
     container_name: nlp-backend
     env_file:
       - .env
-    # depends_on:
-    #   - redis
+    depends_on:
+      - redis
+    environment:
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5000
     ports:
       - "5000:5000"
     volumes:
@@ -14,13 +17,13 @@ services:
       - ../shared:/app/shared
     command: python src/app.py --debug --host=0.0.0.0
 
-#   redis:
-#     image: redis/redis-stack-server:7.2.0-v9
-#     container_name: nlp-redis
-#     ports:
-#       - "6379:6379"
-#     volumes:
-#       - redis_data:/data
+  redis:
+    image: redis/redis-stack-server:7.2.0-v9
+    container_name: nlp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 #   embedding_worker:
 #     build:
@@ -52,5 +55,5 @@ services:
 #     environment:
 #       - PYTHONPATH=/app/src:/app/shared
 
-# volumes:
-#   redis_data:
+volumes:
+  redis_data:
