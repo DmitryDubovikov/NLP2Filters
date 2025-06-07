@@ -1,1 +1,56 @@
- 
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: nlp-backend
+    env_file:
+      - .env
+    # depends_on:
+    #   - redis
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - ../shared:/app/shared
+    command: python src/app.py --debug --host=0.0.0.0
+
+#   redis:
+#     image: redis/redis-stack-server:7.2.0-v9
+#     container_name: nlp-redis
+#     ports:
+#       - "6379:6379"
+#     volumes:
+#       - redis_data:/data
+
+#   embedding_worker:
+#     build:
+#       context: ./embedding_worker
+#     container_name: nlp-embedding-worker
+#     depends_on:
+#       - redis
+#     volumes:
+#       - ./embedding_worker:/app
+#       - ./shared:/app/shared
+#     env_file:
+#       - .env
+#     command: rq worker embedding
+#     environment:
+#       - PYTHONPATH=/app/src:/app/shared
+
+#   llm_worker:
+#     build:
+#       context: ./llm_worker
+#     container_name: nlp-llm-worker
+#     depends_on:
+#       - redis
+#     volumes:
+#       - ./llm_worker:/app
+#       - ./shared:/app/shared
+#     env_file:
+#       - .env
+#     command: rq worker llm
+#     environment:
+#       - PYTHONPATH=/app/src:/app/shared
+
+# volumes:
+#   redis_data:
