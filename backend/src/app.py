@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
+from routes_embedding import embedding_bp
 
 app = Flask(__name__)
+app.register_blueprint(embedding_bp)
 
 
 @app.route("/health", methods=["GET"])

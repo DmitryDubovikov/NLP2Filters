@@ -25,20 +25,21 @@ services:
     volumes:
       - redis_data:/data
 
-#   embedding_worker:
-#     build:
-#       context: ./embedding_worker
-#     container_name: nlp-embedding-worker
-#     depends_on:
-#       - redis
-#     volumes:
-#       - ./embedding_worker:/app
-#       - ./shared:/app/shared
-#     env_file:
-#       - .env
-#     command: rq worker embedding
-#     environment:
-#       - PYTHONPATH=/app/src:/app/shared
+  embedding_worker:
+    build:
+      context: ./embedding_worker
+    container_name: nlp-embedding-worker
+    depends_on:
+      - redis
+    volumes:
+      - ./embedding_worker:/app
+      - ../shared:/app/shared
+    env_file:
+      - .env
+    command: rq worker embedding
+    environment:
+      - PYTHONPATH=/app/src:/app/shared
+      - REDIS_URL=redis://redis:6379/0
 
 #   llm_worker:
 #     build:
