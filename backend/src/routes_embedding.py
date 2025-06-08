@@ -11,7 +11,7 @@ redis_conn = redis.from_url(redis_url)
 embedding_queue = Queue("embedding", connection=redis_conn)
 
 def enqueue_echo_task(text: str) -> str:
-    job = embedding_queue.enqueue("tasks_embedding_tasks.echo_task", text)
+    job = embedding_queue.enqueue("embedding_tasks.echo_task", text)
     return job.get_id()
 
 def get_job_result(job_id: str):
