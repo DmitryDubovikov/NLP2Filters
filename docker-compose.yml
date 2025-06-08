@@ -56,5 +56,15 @@ services:
 #     environment:
 #       - PYTHONPATH=/app/src:/app/shared
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nlp-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
 volumes:
   redis_data:

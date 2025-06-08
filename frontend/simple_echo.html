@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Echo</title>
+</head>
+<body>
+    <h1>Echo</h1>
+    
+    <input type="text" id="text" placeholder="Enter text..."><br><br>
+    <button onclick="sendEcho()">Send</button><br><br>
+    
+    <div id="loading" style="display:none">Waiting...</div>
+    
+    <h3>Result:</h3>
+    <div id="result" style="border: 1px solid #ccc; padding: 10px; min-height: 50px; background: #f9f9f9;"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        
+        async function sendEcho() {
+            const text = document.getElementById('text').value;
+            if (!text) return;
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').innerHTML = '';
+            
+            try {
+                // Send request
+                const response = await fetch(`${API_BASE}/embedding/echo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                const data = await response.json();
+                
+                // Get result
+                const result = await getResult(data.job_id);
+                document.getElementById('result').innerHTML = result;
+                
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        async function getResult(jobId) {
+            const maxAttempts = 40; // 10 seconds / 0.25 seconds = 40 attempts
+            
+            for (let i = 0; i < maxAttempts; i++) {
+                const response = await fetch(`${API_BASE}/embedding/result/${jobId}`);
+                const data = await response.json();
+                
+                if (data.result) return data.result;
+                
+                await new Promise(resolve => setTimeout(resolve, 250)); // 0.25 seconds
+            }
+            throw new Error('Timeout');
+        }
+    </script>
+</body>
+</html>
