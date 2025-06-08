@@ -55,6 +55,7 @@ services:
     command: rq worker llm
     environment:
       - PYTHONPATH=/app/src:/app/shared
+      - REDIS_URL=redis://redis:6379/0
 
   frontend:
     build:
