@@ -41,20 +41,20 @@ services:
       - PYTHONPATH=/app/src:/app/shared
       - REDIS_URL=redis://redis:6379/0
 
-#   llm_worker:
-#     build:
-#       context: ./llm_worker
-#     container_name: nlp-llm-worker
-#     depends_on:
-#       - redis
-#     volumes:
-#       - ./llm_worker:/app
-#       - ./shared:/app/shared
-#     env_file:
-#       - .env
-#     command: rq worker llm
-#     environment:
-#       - PYTHONPATH=/app/src:/app/shared
+  llm_worker:
+    build:
+      context: ./llm_worker
+    container_name: nlp-llm-worker
+    depends_on:
+      - redis
+    volumes:
+      - ./llm_worker:/app
+      - ./shared:/app/shared
+    env_file:
+      - .env
+    command: rq worker llm
+    environment:
+      - PYTHONPATH=/app/src:/app/shared
 
   frontend:
     build:
